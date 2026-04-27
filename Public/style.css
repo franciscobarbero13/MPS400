@@ -1,0 +1,96 @@
+:root{
+    --color-acento: #1F3A5F;
+    --color-acento-claro: #F2F2F2;
+    --color-texto: black;
+}
+
+body{
+    font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+}
+
+h3, p{
+    margin: 6px 0;
+}
+
+.guest-only{
+    display: none;
+}
+
+#user-info{
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.compra-exitosa h1{
+    text-align: center;
+}
+
+a{
+    text-decoration: none;
+    color: var(--color-texto);
+}
+
+a:hover:not(#cart){
+    color: var(--color-acento);
+}
+
+button{
+    background-color: var(--color-acento);
+    color: white;
+    padding: 5px 10px;
+    border: unset;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+header{
+    box-shadow: 0 3px 5px rgba(0, 0, 0, 0.104);
+    padding: 10px 0;
+    margin-bottom: 10px;
+}
+
+header nav {
+    display: flex;
+    justify-content: space-between;
+    margin: 0 60px;
+}
+
+header nav div{
+    display: flex;
+    align-items: center;
+    gap: 30px;
+    position: relative;
+}
+
+#cuenta-carrito{
+    background-color: var(--color-acento);
+    border-radius: 100%;
+    display: inline-block;
+    width: 20px;
+    text-align: center;
+    position: absolute;
+    color: white;
+}
+
+#logo{
+    height: 50px;
+}
+
+header nav img{
+    height: 25px;
+}
+
+footer{
+    margin-top: auto;
+    box-shadow: 0 -3px 5px rgba(0, 0, 0, 0.104);
+    text-align: center;
+}
+
+.escondido{
+    display: none;
+}
