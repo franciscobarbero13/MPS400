@@ -61,7 +61,6 @@ app.post("/api/logout", (req, res) => {
 });
 
 app.post("/api/pedidos", async (req, res) => {
-
     if(!req.session || !req.session.userId){
         return res.status(401).json({ error: "No autorizado" });
     }
@@ -72,18 +71,58 @@ app.post("/api/pedidos", async (req, res) => {
     }
 
     try{
-        const[pedidoResult] = await db.execute(
-            "INSERT INTO pedidos(usuario_id) VALUES (?)",
-            [req.session.userId]
+        const detectarColor = (item) => {
+            const valor = (item.color || item.tipo || item.nombre || "")
+                .toString()
+                .toLowerCase()
+                .trim();
+
+            if (!valor) return null;
+
+            if (valor.includes("plateada") || valor.includes("plateado") || valor.includes("plata")) {
+                return "plateadas";
+            }
+
+            if (valor.includes("roja") || valor.includes("rojo")) {
+                return "rojas";
+            }
+
+            if (valor.includes("negra") || valor.includes("negro")) {
+                return "negras";
+            }
+
+            return null;
+        };
+
+        let rojas = 0;
+        let negras = 0;
+        let plateadas = 0;
+
+        for (const item of carrito) {
+            const cantidad = Number(item.cantidad) || 0;
+            const color = detectarColor(item);
+
+            if (color === "rojas") {
+                rojas += cantidad;
+            } else if (color === "negras") {
+                negras += cantidad;
+            } else if (color === "plateadas") {
+                plateadas += cantidad;
+            }
+        }
+
+        const totalPiezas = rojas + negras + plateadas;
+        if (totalPiezas === 0) {
+            return res.status(400).json({ error: "Carrito invalido" });
+        }
+
+        const [pedidoResult] = await db.execute(
+            `INSERT INTO pedidos (id_usuario, estado, fecha_inicio, total_piezas, rojas, negras, plateadas)
+             VALUES (?, 0, NOW(), ?, ?, ?, ?)`,
+            [req.session.userId, totalPiezas, rojas, negras, plateadas]
         );
 
         const pedidoId = pedidoResult.insertId;
-        for(const item of carrito){
-            await db.execute(
-                "INSERT INTO pedido_items (pedido_id, tipo, cantidad) VALUES (?, ?, ?)", 
-                [pedidoId, item.id, item.cantidad]
-            );
-        }
         
         res.json({ ok: true, idPedido: pedidoId });
     }catch(error){
@@ -146,6 +185,6 @@ app.get("/api/piezas", async (req, res) => {
 });
 
 
-app.listen(PORT, () => {
-    console.log("Servidor funcionando en http://localhost:3000")
-})  
+app.listen(PORT, '0.0.0.0', () => {
+    console.log(`Servidor funcionando en http://0.0.0.0:${PORT}`)
+}) 
