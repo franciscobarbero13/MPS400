@@ -11,11 +11,17 @@ document.addEventListener("DOMContentLoaded", () => {
                 userInfo.style.display = "flex";
                 document.getElementById("username-info").textContent = data.username;
 
+                const trazabilidadBtn = document.getElementById("btn-trazabilidad");
+                if (trazabilidadBtn) trazabilidadBtn.style.display = "inline";
+
             } else {
                 document.querySelectorAll(".guest-only")
                     .forEach(el => el.style.display = "inline");
 
                 document.getElementById("username-info").style.display = "none";
+
+                const trazabilidadBtn = document.getElementById("btn-trazabilidad");
+                if (trazabilidadBtn) trazabilidadBtn.style.display = "none";
             }
     })
     .catch(err => console.error("Error verificando sesion", err));

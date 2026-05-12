@@ -169,6 +169,48 @@ app.post("/api/login", async (req, res) => {
     res.json({ ok: true });
 });
 
+
+app.get("/api/mis-pedidos", async (req, res) => {
+    if(!req.session || !req.session.userId){
+        return res.status(401).json({ error: "No autorizado" });
+    }
+
+    try {
+        const [pedidos] = await db.execute(
+            "SELECT * FROM pedidos WHERE id_usuario = ? ORDER BY id DESC",
+            [req.session.userId]
+        );
+
+        if (pedidos.length === 0) {
+            return res.json({ pedidos: [] });
+        }
+
+        const pedidoIds = pedidos.map((pedido) => pedido.id);
+        const placeholders = pedidoIds.map(() => "?").join(",");
+
+        const [lotes] = await db.execute(
+            `SELECT * FROM lotes WHERE id_pedido IN (${placeholders}) ORDER BY id ASC`,
+            pedidoIds
+        );
+
+        const lotesPorPedido = lotes.reduce((acc, lote) => {
+            if (!acc[lote.id_pedido]) acc[lote.id_pedido] = [];
+            acc[lote.id_pedido].push(lote);
+            return acc;
+        }, {});
+
+        const respuesta = pedidos.map((pedido) => ({
+            ...pedido,
+            lotes: lotesPorPedido[pedido.id] || []
+        }));
+
+        res.json({ pedidos: respuesta });
+    } catch (error) {
+        console.error("Error en /api/mis-pedidos", error);
+        res.status(500).json({ error: "No se pudo cargar la trazabilidad" });
+    }
+});
+
 app.get("/api/pedidos", async (req, res) => {
     const [rows] = await db.execute("SELECT * FROM pedidos ORDER BY id DESC");
     res.json(rows);

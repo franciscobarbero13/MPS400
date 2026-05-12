@@ -101,3 +101,33 @@ footer{
 .escondido{
     display: none;
 }
+#btn-trazabilidad {
+    margin-right: 12px;
+    font-weight: 600;
+}
+
+#pedidos-contenedor {
+    margin-top: 1rem;
+    display: grid;
+    gap: 0.75rem;
+}
+
+.pedido-item {
+    border: 1px solid #d9d9d9;
+    border-radius: 8px;
+    padding: 0.75rem 1rem;
+    background: #fff;
+}
+
+.pedido-item summary {
+    cursor: pointer;
+    line-height: 1.6;
+}
+
+.pedido-detalle {
+    margin-top: 0.8rem;
+}
+
+.pedido-detalle ul {
+    padding-left: 1.2rem;
+}
