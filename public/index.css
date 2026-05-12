@@ -1,9 +1,88 @@
+.hero-principal{
+    display: grid;
+    grid-template-columns: 1.3fr 1fr;
+    gap: 24px;
+    align-items: center;
+    padding: 36px 0 10px;
+}
+
+.hero-etiqueta{
+    display: inline-block;
+    background: var(--color-acento-claro);
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    margin-bottom: 12px;
+}
+
+.hero-principal h1{
+    font-size: clamp(1.7rem, 3.5vw, 2.6rem);
+    margin-bottom: 10px;
+}
+
+.hero-principal p{
+    margin-bottom: 14px;
+}
+
+.hero-cta,
+.hero-cta-secundario{
+    display: inline-block;
+    background-color: var(--color-acento);
+    color: white;
+    padding: 10px 16px;
+    border-radius: 8px;
+    font-weight: 600;
+}
+
+.hero-cta-secundario{
+    padding: 7px 12px;
+    font-size: 0.9rem;
+}
+
+.hero-imagen{
+    width: 100%;
+    max-width: 320px;
+    justify-self: center;
+}
+
+.estado-grid{
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 14px;
+    margin: 20px 0 30px;
+}
+
+.estado-grid article,
+.detalle-operativo{
+    background-color: var(--color-acento-claro);
+    padding: 14px;
+    border-radius: 12px;
+}
+
+.estado-grid h2,
+.detalle-operativo h2{
+    font-size: 1.05rem;
+    margin-bottom: 8px;
+}
+
+.detalle-operativo ul{
+    padding-left: 18px;
+    margin: 0;
+    display: grid;
+    gap: 8px;
+}
+
+.catalogo-head{
+    text-align: center;
+    margin-bottom: 10px;
+}
+
 #productos-conteiner{
     display: flex;
     flex-wrap: wrap;
     gap: 20px;
     justify-content: center;
-    padding: 40px 0;
+    padding: 20px 0 40px;
 }
 
 .tarjeta-producto{
@@ -11,6 +90,7 @@
     text-align: center;
     background-color: var(--color-acento-claro);
     padding: 10px;
+    border-radius: 10px;
     box-shadow: 0 0 5px rgba(0, 0, 0, 0.104);
     transition: 200ms;
 }
@@ -20,7 +100,9 @@
     box-shadow: 0 10px 5px rgba(0, 0, 0, 0.104);
 }
 
+.tarjeta-producto img{ width: 100%; }
 
-.tarjeta-producto img{
-    width: 100%;
+@media (max-width: 860px){
+    .hero-principal{ grid-template-columns: 1fr; text-align: center; }
+    .estado-grid{ grid-template-columns: 1fr; }
 }

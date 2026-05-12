@@ -4,10 +4,9 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Portal principal MPS-400 para gestión de piezas con trazabilidad RFID y conexión a producción.">
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="index.css">
-    <script src="./js/productosService.js"></script>
-    <script src="./js/index.js" defer></script>
     <script src="./js/cartService.js" defer></script>
     <script src="./js/auth.js" defer></script>
     <title>Piezas MPS-400</title>
@@ -23,12 +22,46 @@
                 </div>
                 <a href="./register.html" id="btn-register" class="guest-only">Registrarse</a>
                 <a href="./iniciar_sesion.html" id="btn-login" class="guest-only">Iniciar Sesion</a>
+                <a href="./tienda.html" class="hero-cta-secundario">Ir a compras</a>
                 <a href="./cart.html" id="cart"><img src="./img/107831.png" alt="Carrito de compras"><span id="cuenta-carrito">0</span></a>
             </div>
         </nav>
     </header>
     <main>
-        <section id="productos-conteiner"></section>
+        <section class="hero-principal">
+            <div>
+                <p class="hero-etiqueta">MPS-400 · Centro de trazabilidad</p>
+                <h1>Piezas identificadas, controladas y listas para producción</h1>
+                <p>En esta plataforma se centraliza la información técnica de cada pieza para asegurar control de lote, escaneo RFID y continuidad operativa.</p>
+                <a href="./tienda.html" class="hero-cta">Entrar al catálogo de compra</a>
+            </div>
+            <img src="./img/logo_HLANZ.png" alt="Panel de piezas y producción" class="hero-imagen">
+        </section>
+
+        <section class="estado-grid" aria-label="Tipos de piezas">
+            <article>
+                <h2>Piezas rojas</h2>
+                <p>Usadas para lotes de alta prioridad. Cada unidad tiene RFID con ID único y número de lote para auditoría rápida.</p>
+            </article>
+            <article>
+                <h2>Piezas negras</h2>
+                <p>Orientadas a producción estándar con trazabilidad completa: fecha, lote y estación de verificación asociada.</p>
+            </article>
+            <article>
+                <h2>Piezas plateadas</h2>
+                <p>Asignadas a ciclos de precisión. El RFID registra lote, historial de movimientos y confirmación previa a despacho.</p>
+            </article>
+        </section>
+
+        <section class="detalle-operativo">
+            <h2>¿Qué información se controla por pieza?</h2>
+            <ul>
+                <li><strong>RFID asignado:</strong> código único para lectura automática en planta.</li>
+                <li><strong>Número de lote:</strong> vinculación directa con orden de fabricación.</li>
+                <li><strong>Estado operativo:</strong> recibido, validado, en producción o liberado.</li>
+                <li><strong>Trazabilidad histórica:</strong> registro de cada movimiento interno.</li>
+            </ul>
+        </section>
     </main>
     <footer>
         <p>Creado por Francisco Barbero y Lucas Saavedra</p>
