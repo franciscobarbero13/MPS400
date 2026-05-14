@@ -42,22 +42,35 @@ function valorNumero(valor) {
     return Number.isFinite(Number(valor)) ? Number(valor) : 0;
 }
 
-function piezasHTML(obj) {
+function piezasEsperadasHTML(obj) {
+    const piezas = [
+        { key: "rojas", nombre: "Rojas" },
+        { key: "negras", nombre: "Negras" },
+        { key: "plateadas", nombre: "Plateadas" }
+    ];
+
+    return `
+        <div class="esperadas-grid">
+            ${piezas.map((pieza) => `
+                <article class="esperada-card">
+                    <p><strong>${pieza.nombre} esperadas:</strong> <span class="resultado-numero">${valorNumero(obj[pieza.key])}</span></p>
+                </article>
+            `).join("")}
+        </div>
+    `;
+}
+
+function detalleResultadosHTML(obj) {
     return `
         <div class="piezas-grid">
-            <p><strong>🔴 Rojas:</strong> ${valorNumero(obj.rojas)}</p>
-            <p><strong>⚫ Negras:</strong> ${valorNumero(obj.negras)}</p>
-            <p><strong>⚪ Plateadas:</strong> ${valorNumero(obj.plateadas)}</p>
+            <p><strong class="label-valida">Rojas válidas:</strong> <span class="resultado-numero">${valorNumero(obj.rojas_validas)}</span></p>
+            <p><strong class="label-valida">Negras válidas:</strong> <span class="resultado-numero">${valorNumero(obj.negras_validas)}</span></p>
+            <p><strong class="label-valida">Plateadas válidas:</strong> <span class="resultado-numero">${valorNumero(obj.plateadas_validas)}</span></p>
         </div>
         <div class="piezas-grid">
-            <p><strong>✅ Rojas válidas:</strong> ${valorNumero(obj.rojas_validas)}</p>
-            <p><strong>✅ Negras válidas:</strong> ${valorNumero(obj.negras_validas)}</p>
-            <p><strong>✅ Plateadas válidas:</strong> ${valorNumero(obj.plateadas_validas)}</p>
-        </div>
-        <div class="piezas-grid">
-            <p><strong>❌ Rojas fallidas:</strong> ${valorNumero(obj.rojas_fallidas)}</p>
-            <p><strong>❌ Negras fallidas:</strong> ${valorNumero(obj.negras_fallidas)}</p>
-            <p><strong>❌ Plateadas fallidas:</strong> ${valorNumero(obj.plateadas_fallidas)}</p>
+            <p><strong class="label-fallida">Rojas fallidas:</strong> <span class="resultado-numero">${valorNumero(obj.rojas_fallidas)}</span></p>
+            <p><strong class="label-fallida">Negras fallidas:</strong> <span class="resultado-numero">${valorNumero(obj.negras_fallidas)}</span></p>
+            <p><strong class="label-fallida">Plateadas fallidas:</strong> <span class="resultado-numero">${valorNumero(obj.plateadas_fallidas)}</span></p>
         </div>
     `;
 }
@@ -70,8 +83,6 @@ function renderPedidos(pedidos) {
         const pedidoItem = document.createElement("details");
         pedidoItem.className = "pedido-item";
 
-        
-
         pedidoItem.innerHTML = `
             <summary>
                  <div class="pedido-summary-grid">
@@ -82,13 +93,15 @@ function renderPedidos(pedidos) {
                     </div>
                     <div class="pedido-summary-right">
                         ${badgeEstado(pedido.estado, "pedido")}
-                        <span class="total-pill">${pedido.total_piezas ?? "-"} piezas</span>
+                        <span class="total-pill">${valorNumero(pedido.total_piezas)} piezas pedidas</span>
                     </div>
                 </div>
             </summary>
             <div class="pedido-detalle">
-                 <h3>Piezas del pedido</h3>
-                ${piezasHTML(pedido)}
+                 <h3>Piezas esperadas del pedido</h3>
+                ${piezasEsperadasHTML(pedido)}
+                <h3>Resultado real del pedido</h3>
+                ${detalleResultadosHTML(pedido)}
                 <h3>Lotes del pedido</h3>
                 <ul class="lotes-lista">
                     ${(pedido.lotes && pedido.lotes.length > 0)
@@ -99,7 +112,10 @@ function renderPedidos(pedidos) {
                                     ${badgeEstado(lote.estado, "lote")}
                                 </div>
                                 <div class="lote-meta">Inicio: ${formatearFecha(lote.fecha_inicio)} · Prod. inicio: ${formatearFecha(lote.fecha_prod_inicio)} · Prod. fin: ${formatearFecha(lote.fecha_prod_fin)}</div>
-                                ${piezasHTML(lote)}
+                                <h4>Piezas esperadas del lote</h4>
+                                ${piezasEsperadasHTML(lote)}
+                                <h4>Resultado real del lote</h4>
+                                ${detalleResultadosHTML(lote)}
                             </li>
                         `).join("")
                         : "<li>Sin lotes cargados todavía.</li>"
