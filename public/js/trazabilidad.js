@@ -38,6 +38,30 @@ function badgeEstado(valor, tipo) {
     return `<span class="estado-chip ${estado.clase}">${estado.texto}</span>`;
 }
 
+function valorNumero(valor) {
+    return Number.isFinite(Number(valor)) ? Number(valor) : 0;
+}
+
+function piezasHTML(obj) {
+    return `
+        <div class="piezas-grid">
+            <p><strong>🔴 Rojas:</strong> ${valorNumero(obj.rojas)}</p>
+            <p><strong>⚫ Negras:</strong> ${valorNumero(obj.negras)}</p>
+            <p><strong>⚪ Plateadas:</strong> ${valorNumero(obj.plateadas)}</p>
+        </div>
+        <div class="piezas-grid">
+            <p><strong>✅ Rojas válidas:</strong> ${valorNumero(obj.rojas_validas)}</p>
+            <p><strong>✅ Negras válidas:</strong> ${valorNumero(obj.negras_validas)}</p>
+            <p><strong>✅ Plateadas válidas:</strong> ${valorNumero(obj.plateadas_validas)}</p>
+        </div>
+        <div class="piezas-grid">
+            <p><strong>❌ Rojas fallidas:</strong> ${valorNumero(obj.rojas_fallidas)}</p>
+            <p><strong>❌ Negras fallidas:</strong> ${valorNumero(obj.negras_fallidas)}</p>
+            <p><strong>❌ Plateadas fallidas:</strong> ${valorNumero(obj.plateadas_fallidas)}</p>
+        </div>
+    `;
+}
+
 function renderPedidos(pedidos) {
     const contenedor = document.getElementById("pedidos-contenedor");
     contenedor.innerHTML = "";
@@ -46,16 +70,15 @@ function renderPedidos(pedidos) {
         const pedidoItem = document.createElement("details");
         pedidoItem.className = "pedido-item";
 
-        const fechaPedido = pedido.fecha_inicio || pedido.fecha_pedido || pedido.created_at;
-        const fechaProduccion = pedido.fecha_produccion || pedido.fecha_fin || pedido.updated_at;
+        
 
         pedidoItem.innerHTML = `
             <summary>
                  <div class="pedido-summary-grid">
                     <div>
-                        <strong>Pedido #${pedido.id}</strong>
-                        <div class="pedido-fechas">Pedido: ${formatearFecha(fechaPedido)}</div>
-                        <div class="pedido-fechas">Producción: ${formatearFecha(fechaProduccion)}</div>
+                        <div class="pedido-fechas">Inicio: ${formatearFecha(pedido.fecha_inicio)}</div>
+                        <div class="pedido-fechas">Prod. inicio: ${formatearFecha(pedido.fecha_prod_inicio)}</div>
+                        <div class="pedido-fechas">Prod. fin: ${formatearFecha(pedido.fecha_prod_fin)}</div>
                     </div>
                     <div class="pedido-summary-right">
                         ${badgeEstado(pedido.estado, "pedido")}
@@ -64,21 +87,19 @@ function renderPedidos(pedidos) {
                 </div>
             </summary>
             <div class="pedido-detalle">
-                <div class="piezas-grid">
-                    <p><strong>🔴 Rojas:</strong> ${pedido.rojas ?? 0}</p>
-                    <p><strong>⚫ Negras:</strong> ${pedido.negras ?? 0}</p>
-                    <p><strong>⚪ Plateadas:</strong> ${pedido.plateadas ?? 0}</p>
-                </div>
-                <h3>Lotes</h3>
+                 <h3>Piezas del pedido</h3>
+                ${piezasHTML(pedido)}
+                <h3>Lotes del pedido</h3>
                 <ul class="lotes-lista">
                     ${(pedido.lotes && pedido.lotes.length > 0)
                         ? pedido.lotes.map((lote) => `
                             <li>
                                 <div class="lote-head">
-                                    <strong>Lote #${lote.id}</strong>
+                                    <strong>Lote #${lote.n_lote ?? lote.id}</strong>
                                     ${badgeEstado(lote.estado, "lote")}
                                 </div>
-                                <div class="lote-meta">Piezas: ${lote.cantidad ?? lote.total_piezas ?? "-"} · Inicio: ${formatearFecha(lote.fecha_inicio || lote.created_at)}</div>
+                                <div class="lote-meta">Inicio: ${formatearFecha(lote.fecha_inicio)} · Prod. inicio: ${formatearFecha(lote.fecha_prod_inicio)} · Prod. fin: ${formatearFecha(lote.fecha_prod_fin)}</div>
+                                ${piezasHTML(lote)}
                             </li>
                         `).join("")
                         : "<li>Sin lotes cargados todavía.</li>"
