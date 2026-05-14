@@ -21,6 +21,12 @@ const ESTADOS_LOTE = {
     4: { texto: "Terminado con fallos", clase: "estado-fallo" }
 };
 
+const PIEZA_IMAGENES = {
+    rojas: "./img/1.png",
+    negras: "./img/3.png",
+    plateadas: "./img/2.png"
+};
+
 function resolverEstado(valor, tipo) {
     const mapa = tipo === "pedido" ? ESTADOS_PEDIDO : ESTADOS_LOTE;
     const estado = typeof valor === "number" ? mapa[valor] : null;
@@ -42,13 +48,27 @@ function valorNumero(valor) {
     return Number.isFinite(Number(valor)) ? Number(valor) : 0;
 }
 
-function piezasHTML(obj) {
+function piezasEsperadasHTML(obj) {
+    const piezas = [
+        { key: "rojas", nombre: "Rojas", icono: "🔴" },
+        { key: "negras", nombre: "Negras", icono: "⚫" },
+        { key: "plateadas", nombre: "Plateadas", icono: "⚪" }
+    ];
+
     return `
-        <div class="piezas-grid">
-            <p><strong>🔴 Rojas:</strong> ${valorNumero(obj.rojas)}</p>
-            <p><strong>⚫ Negras:</strong> ${valorNumero(obj.negras)}</p>
-            <p><strong>⚪ Plateadas:</strong> ${valorNumero(obj.plateadas)}</p>
+        <div class="esperadas-grid">
+            ${piezas.map((pieza) => `
+                <article class="esperada-card">
+                    <img src="${PIEZA_IMAGENES[pieza.key]}" alt="Pieza ${pieza.nombre.toLowerCase()} esperada" />
+                    <p><strong>${pieza.icono} ${pieza.nombre} esperadas:</strong> ${valorNumero(obj[pieza.key])}</p>
+                </article>
+            `).join("")}
         </div>
+    `;
+}
+
+function detalleResultadosHTML(obj) {
+    return `
         <div class="piezas-grid">
             <p><strong>✅ Rojas válidas:</strong> ${valorNumero(obj.rojas_validas)}</p>
             <p><strong>✅ Negras válidas:</strong> ${valorNumero(obj.negras_validas)}</p>
@@ -70,8 +90,6 @@ function renderPedidos(pedidos) {
         const pedidoItem = document.createElement("details");
         pedidoItem.className = "pedido-item";
 
-        
-
         pedidoItem.innerHTML = `
             <summary>
                  <div class="pedido-summary-grid">
@@ -82,13 +100,15 @@ function renderPedidos(pedidos) {
                     </div>
                     <div class="pedido-summary-right">
                         ${badgeEstado(pedido.estado, "pedido")}
-                        <span class="total-pill">${pedido.total_piezas ?? "-"} piezas</span>
+                        <span class="total-pill">${valorNumero(pedido.total_piezas)} piezas pedidas</span>
                     </div>
                 </div>
             </summary>
             <div class="pedido-detalle">
-                 <h3>Piezas del pedido</h3>
-                ${piezasHTML(pedido)}
+                 <h3>Piezas esperadas del pedido</h3>
+                ${piezasEsperadasHTML(pedido)}
+                <h3>Resultado real del pedido</h3>
+                ${detalleResultadosHTML(pedido)}
                 <h3>Lotes del pedido</h3>
                 <ul class="lotes-lista">
                     ${(pedido.lotes && pedido.lotes.length > 0)
@@ -99,7 +119,10 @@ function renderPedidos(pedidos) {
                                     ${badgeEstado(lote.estado, "lote")}
                                 </div>
                                 <div class="lote-meta">Inicio: ${formatearFecha(lote.fecha_inicio)} · Prod. inicio: ${formatearFecha(lote.fecha_prod_inicio)} · Prod. fin: ${formatearFecha(lote.fecha_prod_fin)}</div>
-                                ${piezasHTML(lote)}
+                                <h4>Piezas esperadas del lote</h4>
+                                ${piezasEsperadasHTML(lote)}
+                                <h4>Resultado real del lote</h4>
+                                ${detalleResultadosHTML(lote)}
                             </li>
                         `).join("")
                         : "<li>Sin lotes cargados todavía.</li>"
