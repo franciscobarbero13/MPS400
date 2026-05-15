@@ -119,3 +119,18 @@ input[type="submit"]:hover{
 .registrarse a:hover{
     text-decoration: underline;
 }
+
+
+.pantalla-contrasena{
+    height: 100vh;
+    margin: 0;
+    background: #000;
+}
+
+#imagen-contrasena{
+    width: 100vw;
+    height: 100vh;
+    object-fit: contain;
+    object-position: center;
+    display: block;
+}
