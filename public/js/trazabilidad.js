@@ -21,12 +21,6 @@ const ESTADOS_LOTE = {
     4: { texto: "Terminado con fallos", clase: "estado-fallo" }
 };
 
-const PIEZA_IMAGENES = {
-    rojas: "./img/1.png",
-    negras: "./img/3.png",
-    plateadas: "./img/2.png"
-};
-
 function resolverEstado(valor, tipo) {
     const mapa = tipo === "pedido" ? ESTADOS_PEDIDO : ESTADOS_LOTE;
     const estado = typeof valor === "number" ? mapa[valor] : null;
@@ -50,17 +44,16 @@ function valorNumero(valor) {
 
 function piezasEsperadasHTML(obj) {
     const piezas = [
-        { key: "rojas", nombre: "Rojas", icono: "🔴" },
-        { key: "negras", nombre: "Negras", icono: "⚫" },
-        { key: "plateadas", nombre: "Plateadas", icono: "⚪" }
+        { key: "rojas", nombre: "Rojas" },
+        { key: "negras", nombre: "Negras" },
+        { key: "plateadas", nombre: "Plateadas" }
     ];
 
     return `
         <div class="esperadas-grid">
             ${piezas.map((pieza) => `
                 <article class="esperada-card">
-                    <img src="${PIEZA_IMAGENES[pieza.key]}" alt="Pieza ${pieza.nombre.toLowerCase()} esperada" />
-                    <p><strong>${pieza.icono} ${pieza.nombre} esperadas:</strong> ${valorNumero(obj[pieza.key])}</p>
+                    <p><strong>${pieza.nombre} esperadas:</strong> <span class="resultado-numero">${valorNumero(obj[pieza.key])}</span></p>
                 </article>
             `).join("")}
         </div>
@@ -70,14 +63,14 @@ function piezasEsperadasHTML(obj) {
 function detalleResultadosHTML(obj) {
     return `
         <div class="piezas-grid">
-            <p><strong>✅ Rojas válidas:</strong> ${valorNumero(obj.rojas_validas)}</p>
-            <p><strong>✅ Negras válidas:</strong> ${valorNumero(obj.negras_validas)}</p>
-            <p><strong>✅ Plateadas válidas:</strong> ${valorNumero(obj.plateadas_validas)}</p>
+            <p><strong class="label-valida">Rojas válidas:</strong> <span class="resultado-numero">${valorNumero(obj.rojas_validas)}</span></p>
+            <p><strong class="label-valida">Negras válidas:</strong> <span class="resultado-numero">${valorNumero(obj.negras_validas)}</span></p>
+            <p><strong class="label-valida">Plateadas válidas:</strong> <span class="resultado-numero">${valorNumero(obj.plateadas_validas)}</span></p>
         </div>
         <div class="piezas-grid">
-            <p><strong>❌ Rojas fallidas:</strong> ${valorNumero(obj.rojas_fallidas)}</p>
-            <p><strong>❌ Negras fallidas:</strong> ${valorNumero(obj.negras_fallidas)}</p>
-            <p><strong>❌ Plateadas fallidas:</strong> ${valorNumero(obj.plateadas_fallidas)}</p>
+            <p><strong class="label-fallida">Rojas fallidas:</strong> <span class="resultado-numero">${valorNumero(obj.rojas_fallidas)}</span></p>
+            <p><strong class="label-fallida">Negras fallidas:</strong> <span class="resultado-numero">${valorNumero(obj.negras_fallidas)}</span></p>
+            <p><strong class="label-fallida">Plateadas fallidas:</strong> <span class="resultado-numero">${valorNumero(obj.plateadas_fallidas)}</span></p>
         </div>
     `;
 }
